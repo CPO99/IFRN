@@ -6,7 +6,8 @@ try:
     DIA = int(input("Informe o dia: "))
     
     BISSEXTO = 0 #bissexto como 1 ou 0 para somar aos dias na contagem no decorrer do codigo
-    
+
+    #verificando se ano é bissexto
     if ANO % 400 == 0:
         BISSEXTO = 1
     else:
@@ -14,11 +15,11 @@ try:
             BISSEXTO = 1
     
     if MES == 1:
-        if DIA >= 1 and DIA <= 31:
+        if DIA >= 1 and DIA <= 31: #verificando o intervalo de dias do mes
             print("-\n- Dia Juliano",DIA)
         else:
             print("[ERRO] - Dia informado inválido!!!")
-    elif MES == 2:
+    elif MES == 2: #fevereiro tem duas verificacoes de dias devido ao ano bissexto aumentar ou diminuir um dia desse mes
         if BISSEXTO == 1:
             if DIA >= 1 and DIA <= 29:
                 print("\n- Dia juliano",31 + DIA)
