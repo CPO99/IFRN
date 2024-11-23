@@ -3,14 +3,16 @@ import random
 print("TENTANDO ADVINHAR NÚMERO EM ATÉ 4 TENTATIVAS\n")
 
 try:
-    SORT = random.randint(1, 100)
+    SORT = random.randint(1, 100) #sorteando o número
 
+    #nesse primeiro momento, atribuindo as extremidades dos intervalos
     INI = 1
     FIM = 100
     
     print("Intervalo para tentativa entre",INI,"e",FIM)
     N = int(input("Primeira tentativa: "))
 
+    #verificando se o número informado está dentro do intervalo permitido
     if INI > N or FIM < N:
         print("[ERRO] - Informar intervalo entre 1 e 100. Tente novamente!")
     else:
@@ -19,6 +21,8 @@ try:
         else:
             print("\n-------------------------------------------\n")
             print("Ainda não foi dessa vez... vamos para a segunda tentativa\n")
+
+            #fazendo os ajustes nas extremidades dos intervalores, conforme comparação entre número sortado e número informado
             if SORT > N:
                 INI = N + 1
             else:
