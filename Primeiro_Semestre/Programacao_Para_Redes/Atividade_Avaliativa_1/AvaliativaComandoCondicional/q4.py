@@ -4,6 +4,7 @@ ANO = int(input("Informe o ano a ser verificado: "))
 
 VER = ""
 
+#condicao para ano nao ser bissexto
 if ANO % 400 != 0:
     if ANO % 4 != 0 or ANO % 100 == 0:
         VER = "não "  
