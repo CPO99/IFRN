@@ -5,7 +5,17 @@ git config --globall user.email "clenylson.perycles@gmail.com"
 
 COMANDO PARA CRIAR CHAVE SSH
 
+ssh-keygen -t ed25519 -C "clenylson.perycles@gmail.com"
 
+COMANDOS PARA VER A CHAVE SSH PÚBLICA PARA SER INSERIDA NO GIT
+
+#esse comando acessa a pasta raiz com as chaves públicas e privadas criadas anteriormente
+
+cd ~/.ssh
+
+#esse comando abre a chave pública
+
+cat <nome do arquivo .pub>
 
 CONECTANDO A REPOSITORIO REMOTO VIA SSH
 
