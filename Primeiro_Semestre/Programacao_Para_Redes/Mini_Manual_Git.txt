@@ -1,1 +1,12 @@
-Texto teste
+CONFIGURAÇÕES INICIAIS
+
+git config --globall user.name "Clenylson Perycles"
+git config --globall user.email "clenylson.perycles@gmail.com"
+
+COMANDO PARA CRIAR CHAVE SSH
+
+
+
+CONECTANDO A REPOSITORIO REMOTO VIA SSH
+
+git remote set-url origin git@github.com:CPO99/IFRN.git
