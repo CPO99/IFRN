@@ -14,4 +14,4 @@ while NUMERO >= 0:
     
 
 print("\nQuantidade de números informados:",CONT)
-print("Média dos número informados:",SOMA / CONT)
+print("Média dos número informados:",SOMA / CONT if SOMA != 0 else "sem dados")
