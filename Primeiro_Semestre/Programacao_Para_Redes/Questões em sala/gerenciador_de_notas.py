@@ -43062,6 +43062,8 @@ dados = '''0718730-0;AABAN VASCONCELOS ZYZZYAG;3;3;1,5;10
 0758980-8;ZULMARA ROMANO GUERREIRO LIRA CABRAL;5,25;3;2,25;21,25
 0625370-9;ZULMIRA GOMES DE ARAUJO;1,5;3,75;0,75;8,75'''
 
+TOP_20 = []
+
 for aluno in dados.split('\n'):
     DADOS_ALUNO = aluno.split(';')
     
@@ -43072,5 +43074,73 @@ for aluno in dados.split('\n'):
         
         NF += float(n)
 
-    if NF > 10:
-        print("Matrícula:",DADOS_ALUNO[0],"| Nome:",DADOS_ALUNO[1],"| Nota:",NF)
+    if len(TOP_20) <= 20:
+        TOP_20.append([DADOS_ALUNO,NF])
+    else:
+        VER = True
+        CONT = 0
+
+        for k in range(len(TOP_20)):
+            for j in range(len(TOP_20 - 1)):
+                if TOP_20[k] < TOP_20[k + 1]:
+                    AUX = TOP_20[k]
+                    TOP_20[k] = TOP_20[k + 1]
+                    TOP_20[k + 1] = AUX
+        if NF > TOP_20[19][]:
+            TOP_20[19] = NF
+                
+        """
+        while VER:
+            if NF > TOP_20[CONT][1]:
+                TOP_20[CONT] = [DADOS_ALUNO,NF]
+                VER = False
+            else:
+                if CONT < len(TOP_20):
+                    VER = False
+                    
+            CONT += 1
+        """
+
+MEDIA = 0
+
+for i in TOP_20:
+    MEDIA += i[1]
+
+print("TOP 10 PRIMEIROS COLOCADOS\n")
+for i in TOP_20[:10]:
+    print("Matrícula:",i[0][0],"| Nome:",i[0][1],"| Nota:",i[1])
+    
+print("\nTOP 20 PRIMEIROS, MEDIA\n")
+print("Valor:",MEDIA/20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
