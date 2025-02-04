@@ -1,7 +1,7 @@
 CONFIGURAÇÕES INICIAIS
 
-git config --globall user.name "Clenylson Perycles"
-git config --globall user.email "clenylson.perycles@gmail.com"
+git config --global user.name "Clenylson Perycles"
+git config --global user.email "clenylson.perycles@gmail.com"
 
 COMANDO PARA CRIAR CHAVE SSH
 
@@ -19,4 +19,5 @@ cat <nome do arquivo .pub>
 
 CONECTANDO A REPOSITORIO REMOTO VIA SSH
 
+#necessário estar dentro do repositório clonado antes de executar esse comando
 git remote set-url origin git@github.com:CPO99/IFRN.git
