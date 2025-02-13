@@ -1,8 +1,11 @@
 from functools import reduce
+import datetime
+
+inicio = datetime.datetime.now()
 
 def divisoresSoma(n):
     soma = 0
-    for i in range(1, n):
+    for i in range(1, (n // 2) + 1):
         if n % i == 0:
             soma += i
     return soma
@@ -14,6 +17,6 @@ for i in range(1, 10000):
         if i + divisoresSoma(i) not in num_soma and divisoresSoma(i) != i:
             num_soma.append(i + divisoresSoma(i))
             
-print(num_soma)
 print(reduce(lambda x, y: x + y, num_soma))
-print(num_soma)
+
+print(datetime.datetime.now() - inicio)
