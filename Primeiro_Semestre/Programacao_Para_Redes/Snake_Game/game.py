@@ -1,15 +1,20 @@
-import pygame
-import random
+import pygame, random
 
 #iniciar pygame
 pygame.init()
 
 #configurações de tela
 tela = pygame.display.set_mode((0,0), pygame.RESIZABLE)
+pygame.display.set_caption('Jogo da Cobrinha')
 
 #cores
 branco = (255,255,255) 
 preto = (0,0,0)
+
+#função para cobra
+def cobra(cobra_tamanho, cobra_corpo):
+    for x, y in cobra_corpo:
+        pygame.draw.rect(tela, branco, [x, y, cobra_tamanho, cobra_tamanho])
 
 #função para fruta
 def fruta(fruta_pos_x, fruta_pos_y, cobra_tamanho):
@@ -17,10 +22,9 @@ def fruta(fruta_pos_x, fruta_pos_y, cobra_tamanho):
     
     pygame.draw.rect(tela,  random.sample(cores,1)[0], [fruta_pos_x, fruta_pos_y, cobra_tamanho, cobra_tamanho])
 
-#função para cobra
-def cobra(cobra_tamanho, cobra_corpo):
-    for x, y in cobra_corpo:
-        pygame.draw.rect(tela, branco, [x, y, cobra_tamanho, cobra_tamanho])
+#função para contar frutas comidas
+def  contadorFruta():
+    pass
 
 #função principal do jogo
 def jogo():
