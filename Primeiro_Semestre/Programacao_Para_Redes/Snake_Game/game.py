@@ -36,54 +36,45 @@ def obstaculos(tamanho, blocos,tela_largura,tela_altura):
 def jogo(tela_largura, tela_altura):
     jogo_exe = True
 
-    tecla_anterior = "0"
-
-    clock = pygame.time.Clock()
-
-    #posição inicial da cobra
-    cobra_pos_x = 300
-    cobra_pos_y = 300
-
-    #armazena mudança de posição da cobra
-    cobra_mov_x = 0
-    cobra_mov_y = 0
-
-    #lista para armazenar o corpo da cobra, a posição de cada bloco do corpo
-    cobra_corpo = []
-
-    #lado do retângulo que forma a cobra
-    cobra_tamanho = 15
-    
-    #armazena a quantidade de blocos que compõem o corpo da cobra
-    cobra_blocos_qtd = 1
-    
-    #definindo posição da fruta
-    tela_largura, tela_altura = tela.get_size()
-    fruta_pos_x = round(random.randrange(0, tela_largura) / cobra_tamanho) * cobra_tamanho
-    fruta_pos_y = round(random.randrange(0, tela_altura) / cobra_tamanho) * cobra_tamanho
-
-    nivel = 0
-
-    tempo_inicio = pygame.time.get_ticks()
-
     menu = True
     fim_jogo = False
     principal = False
-
-    blocos_obs = []
-
-    """
-    for i in range(0, 10):
-        fruta_pos_x = round(random.randrange(0, tela_largura) / (cobra_tamanho * 2)) * cobra_tamanho * 2
-        fruta_pos_y = round(random.randrange(0, tela_altura) / (cobra_tamanho * 2)) * cobra_tamanho * 2
-
-        blocos_obs.append([])
-    """
+    vitoria = False
             
     while jogo_exe:
         tempo_atual = pygame.time.get_ticks()
 
         if menu:
+            tecla_anterior = "0"
+
+            clock = pygame.time.Clock()
+
+            #posição inicial da cobra
+            cobra_pos_x = 300
+            cobra_pos_y = 300
+
+            #armazena mudança de posição da cobra
+            cobra_mov_x = 0
+            cobra_mov_y = 0
+
+            #lista para armazenar o corpo da cobra, a posição de cada bloco do corpo
+            cobra_corpo = []
+
+            #lado do retângulo que forma a cobra
+            cobra_tamanho = 15
+    
+            #armazena a quantidade de blocos que compõem o corpo da cobra
+            cobra_blocos_qtd = 1
+    
+            #definindo posição da fruta
+            tela_largura, tela_altura = tela.get_size()
+            fruta_pos_x = round(random.randrange(0, tela_largura) / cobra_tamanho) * cobra_tamanho
+            fruta_pos_y = round(random.randrange(0, tela_altura) / cobra_tamanho) * cobra_tamanho
+
+            nivel = 0
+
+            tempo_inicio = pygame.time.get_ticks()
+
             tela.fill(preto)
 
             fonte = pygame.font.Font(None, 40)
@@ -178,30 +169,41 @@ def jogo(tela_largura, tela_altura):
             pygame.display.update()
         
             #verificando se cobra comeu a fruta e mudando de posição, conforme níveis 2 e 3
-            if (cobra_pos_x == fruta_pos_x and cobra_pos_y == fruta_pos_y) or ((nivel == 20 or nivel == 30) and tempo_atual - tempo_inicio > 2000):
-                fruta_pos_x = round(random.randrange(0, tela_largura) / cobra_tamanho) * cobra_tamanho
-                fruta_pos_y = round(random.randrange(0, tela_altura) / cobra_tamanho) * cobra_tamanho
+            if (cobra_pos_x == fruta_pos_x and cobra_pos_y == fruta_pos_y):
+                fruta_pos_x = round(random.randrange(0, (tela_largura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
+                fruta_pos_y = round(random.randrange(0, (tela_altura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
+
+                cobra_blocos_qtd += 1
+
+                if cobra_blocos_qtd == 3:
+                    principal = False
+                    vitoria = True
+
+
+            if ((nivel == 20 or nivel == 30) and tempo_atual - tempo_inicio > 2000):
+                fruta_pos_x = round(random.randrange(0, (tela_largura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
+                fruta_pos_y = round(random.randrange(0, (tela_altura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
 
                 tempo_inicio = tempo_atual
-            
-                cobra_blocos_qtd += 1
 
             if nivel == 30:
                 if cobra_pos_x < 0 or cobra_pos_x > tela_largura or cobra_pos_y < 0 or cobra_pos_y > tela_altura:
                     principal = False
                     fim_jogo = True
+                if cobra_bloco in cobra_corpo[:-1]:
+                    principal = False
+                    fim_jogo = True
 
-            
-            if cobra_bloco in cobra_bloco
+            if nivel == 20:
+                if cobra_pos_x < 0 or cobra_pos_x > tela_largura or cobra_pos_y < 0 or cobra_pos_y > tela_altura:
+                    principal = False
+                    fim_jogo = True
                     
         elif fim_jogo:
             tela.fill(preto)
 
             cobra_blocos_qtd = 0
             cobra_corpo = []
-
-            cobra_pos_x = 300
-            cobra_pos_y = 300
 
             fonte = pygame.font.Font(None, 50)
             texto = fonte.render("FIM DE JOGO!", True, amarelo)
@@ -211,7 +213,36 @@ def jogo(tela_largura, tela_altura):
             tela.blit(texto, retangulo_texto)
 
             fonte = pygame.font.Font(None, 20)
-            texto = fonte.render("Pressione qualquer tecla para continuar...", True, branco)
+            texto = fonte.render("Pressione qualquer tecla para voltar ao menu...", True, branco)
+            retangulo_texto = texto.get_rect()
+            retangulo_texto.center = (tela_largura // 2, tela_altura // 2 + 80)
+
+            tela.blit(texto, retangulo_texto)
+
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    fim_jogo = False
+                    jogo_exe = False
+                    
+                if evento.type == pygame.KEYDOWN:
+                    menu = True
+                    fim_jogo = False
+
+        elif vitoria:
+            tela.fill(preto)
+
+            cobra_blocos_qtd = 0
+            cobra_corpo = []
+
+            fonte = pygame.font.Font(None, 50)
+            texto = fonte.render("PARABÉNS, VOCÊ GANHOU!", True, amarelo)
+            retangulo_texto = texto.get_rect()
+            retangulo_texto.center = (tela_largura // 2, tela_altura // 2)
+
+            tela.blit(texto, retangulo_texto)
+
+            fonte = pygame.font.Font(None, 20)
+            texto = fonte.render("Pressione qualquer tecla para voltar ao menu...", True, branco)
             retangulo_texto = texto.get_rect()
             retangulo_texto.center = (tela_largura // 2, tela_altura // 2 + 80)
 
