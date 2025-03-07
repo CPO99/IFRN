@@ -25,13 +25,18 @@ def fruta(fruta_pos_x, fruta_pos_y, cobra_tamanho):
     
     pygame.draw.rect(tela,  random.sample(cores,1)[0], [fruta_pos_x, fruta_pos_y, cobra_tamanho, cobra_tamanho])
 
-#função para contar frutas comidas
-def contadorFruta():
-    pass
+#função para obstaculos
+"""
+def obstaculos(tamanho, blocos,tela_largura,tela_altura):
+    for x, y in blocos:
+        pygame.draw.rect(tela, white, [x, y, tamanho, tamanho])
+"""
 
 #função principal do jogo
 def jogo(tela_largura, tela_altura):
     jogo_exe = True
+
+    tecla_anterior = "0"
 
     clock = pygame.time.Clock()
 
@@ -64,9 +69,20 @@ def jogo(tela_largura, tela_altura):
     menu = True
     fim_jogo = False
     principal = False
+
+    blocos_obs = []
+
+    """
+    for i in range(0, 10):
+        fruta_pos_x = round(random.randrange(0, tela_largura) / (cobra_tamanho * 2)) * cobra_tamanho * 2
+        fruta_pos_y = round(random.randrange(0, tela_altura) / (cobra_tamanho * 2)) * cobra_tamanho * 2
+
+        blocos_obs.append([])
+    """
             
     while jogo_exe:
         tempo_atual = pygame.time.get_ticks()
+
         if menu:
             tela.fill(preto)
 
@@ -110,9 +126,6 @@ def jogo(tela_largura, tela_altura):
                         nivel = 30
                         menu = False
                         principal = True
-                    elif evento.key == pygame.K_4:
-                        menu = False
-                        fim_jogo = True
 
         elif principal:
             for evento in pygame.event.get():
@@ -120,17 +133,25 @@ def jogo(tela_largura, tela_altura):
                     jogo_exe = False
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_LEFT:
-                        cobra_mov_x = -cobra_tamanho
-                        cobra_mov_y = 0
+                        if tecla_anterior != pygame.K_RIGHT:
+                            cobra_mov_x = -cobra_tamanho
+                            cobra_mov_y = 0
+                            tecla_anterior = evento.key
                     elif evento.key == pygame.K_RIGHT:
-                        cobra_mov_x = cobra_tamanho
-                        cobra_mov_y = 0
+                        if tecla_anterior != pygame.K_LEFT:
+                            cobra_mov_x = cobra_tamanho
+                            cobra_mov_y = 0
+                            tecla_anterior = evento.key
                     elif evento.key == pygame.K_UP:
-                        cobra_mov_x = 0
-                        cobra_mov_y = -cobra_tamanho
+                        if tecla_anterior != pygame.K_DOWN:
+                            cobra_mov_x = 0
+                            cobra_mov_y = -cobra_tamanho
+                            tecla_anterior = evento.key
                     elif evento.key == pygame.K_DOWN:
-                        cobra_mov_x = 0
-                        cobra_mov_y = cobra_tamanho
+                        if tecla_anterior != pygame.K_UP:
+                            cobra_mov_x = 0
+                            cobra_mov_y = cobra_tamanho
+                            tecla_anterior = evento.key
 
             #Atualiza a posição da cobra
             cobra_pos_x += cobra_mov_x
@@ -169,11 +190,18 @@ def jogo(tela_largura, tela_altura):
                 if cobra_pos_x < 0 or cobra_pos_x > tela_largura or cobra_pos_y < 0 or cobra_pos_y > tela_altura:
                     principal = False
                     fim_jogo = True
+
+            
+            if cobra_bloco in cobra_bloco
                     
         elif fim_jogo:
             tela.fill(preto)
 
-            cobra_blocos_qtd = 1
+            cobra_blocos_qtd = 0
+            cobra_corpo = []
+
+            cobra_pos_x = 300
+            cobra_pos_y = 300
 
             fonte = pygame.font.Font(None, 50)
             texto = fonte.render("FIM DE JOGO!", True, amarelo)
