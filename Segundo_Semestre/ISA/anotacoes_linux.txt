@@ -1,0 +1,32 @@
+Comandos Linux
+
+- clear: limpeza de informações na tela 
+- history: me mostra os comandos já executados
+- sleep tempo: informar no lugar de tempo o tempo para o terminal "dormir" 
+- cd: navegação entre diretórios
+- cd ..: volta um diretório
+- pwd: print work directory, mostra o diretório atual
+- ls: lista o conteúdo do diretório atual 
+- ls -l: mostra uma lista do conteúdo do diretório atual, com informações mais detalhadas
+	- O primeiro caractere de cada linha retornado traz a definição do arquivo: -: arquivo comum, d: diretório, l: links, ou seja, atalho
+- jobs mostra os comandos que estão sendo executados em segundo plano com o &
+- fg numero_execucao: informar nome da execução para trazer para primeiro plano
+- touch: cria um arquivo
+- mkdir: criar diretório
+- echo: mostra informação na tela, como o print do Python
+	- echo -e: exibe informação na tela, considerando caracteres especiais, como \n que pula linha
+	- >: ao final do comando echo, envia o conteúdo de echo para um arquivo
+	- >>: ao final do comando echo, envia o conteúdo de echo para um arquivo, sem sobreescerver 
+- --help: usado depois dos comandos para explicação do mesmo
+- man: manual dos comandos, pode ser visto com o ls -a
+
+Informações extras
+
+- #: significa que o usuário logado tem acesso admin
+- $: significa que o usuário logado é comum
+- teclas cima e baixo: alterna entre os comandos já executados
+- a tecla tab completa o comando que eu esteja digitando
+- ~: o tio representa o diretório pessoal do usuário (home), diretório home
+- /home: é um diretório especíal do sistema
+- &: ao final de cada código para executar o código em segundo plano. jobs o que está executando
+- nome de objeto ou diretório iniciando com ponto, ficam ocultos no Linux
