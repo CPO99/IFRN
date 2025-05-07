@@ -25,15 +25,8 @@ def fruta(fruta_pos_x, fruta_pos_y, cobra_tamanho):
     
     pygame.draw.rect(tela,  random.sample(cores,1)[0], [fruta_pos_x, fruta_pos_y, cobra_tamanho, cobra_tamanho])
 
-#função para obstaculos
-"""
-def obstaculos(tamanho, blocos,tela_largura,tela_altura):
-    for x, y in blocos:
-        pygame.draw.rect(tela, white, [x, y, tamanho, tamanho])
-"""
-
 #função principal do jogo
-def jogo(tela_largura, tela_altura):
+def jogo():
     jogo_exe = True
 
     menu = True
@@ -166,20 +159,20 @@ def jogo(tela_largura, tela_altura):
 
             cobra(cobra_tamanho, cobra_corpo)
 
-            pygame.display.update()
+            #pygame.display.update()
         
-            #verificando se cobra comeu a fruta e mudando de posição, conforme níveis 2 e 3
+            #verificando se cobra comeu a fruta
             if (cobra_pos_x == fruta_pos_x and cobra_pos_y == fruta_pos_y):
                 fruta_pos_x = round(random.randrange(0, (tela_largura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
                 fruta_pos_y = round(random.randrange(0, (tela_altura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
 
                 cobra_blocos_qtd += 1
 
-                if cobra_blocos_qtd == 3:
+                if cobra_blocos_qtd == 5:
                     principal = False
                     vitoria = True
 
-
+            #mudando fruta de posição, conforme níveis 2 e 3
             if ((nivel == 20 or nivel == 30) and tempo_atual - tempo_inicio > 2000):
                 fruta_pos_x = round(random.randrange(0, (tela_largura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
                 fruta_pos_y = round(random.randrange(0, (tela_altura - cobra_tamanho)) / cobra_tamanho) * cobra_tamanho
@@ -260,6 +253,6 @@ def jogo(tela_largura, tela_altura):
         pygame.display.flip()
         clock.tick(nivel)
 
-jogo(tela_largura, tela_altura)
+jogo()
     
 
