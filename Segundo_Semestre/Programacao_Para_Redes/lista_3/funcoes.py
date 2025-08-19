@@ -1,4 +1,5 @@
-import socket
+#centralizador de funcoes, seguindo a lógica do professor para uma melhor organização
+import socket, ssl, sys
 
 #tratamento da URL
 def extrairURL(url:str):
@@ -58,14 +59,31 @@ def extrairURL(url:str):
         sucesso=False
         return (sucesso, protocolo, host, caminho, arquivoNome)
 
-ver = True
-while ver:
-    url = input("Informe a URL completa: ")
-
-    retorno = extrairURL(url)
-    if retorno[0] == False:
-        print("Informe uma URL válida."\
-              "\n\nExemplo: \n - https://google.com\n - https://google.com/caminho \n - https://google.com/caminho/index.html\n\n")
+def porta(protocolo:str):
+    if protocolo == "http":
+        return 80
     else:
-        print (retorno)
-        ver = False
+        return 443
+    
+def conectar(host:str, porta:int):
+    import socket
+
+    try:
+
+        #socket TCP, http padrão
+        socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        #porta 443 utiliza socket ssl
+        if porta == 443:
+            context = ssl.create_default_context()
+            socket = context.wrap_socket(socket, server_hostname=host)
+
+        socket.connect((host, porta))
+
+        return "Conexão realizada com sucesso!!!"
+
+    except Exception as e:
+        sys.exit(f'\nERRO.... {type(e).__name__}\n{str(e)}')
+    finally:
+        if 'socket' in locals(): 
+            socket.close()
