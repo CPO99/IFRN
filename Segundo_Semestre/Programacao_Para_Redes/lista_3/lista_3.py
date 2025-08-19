@@ -16,21 +16,26 @@ def extrairURL(url:str):
             return (sucesso, protocolo, host, caminho, arquivoNome)
 
         fimHost = url.find("/",inicioHost)
+        if fimHost == -1:
+            fimHost = len(url)
         host = url[inicioHost:fimHost]
 
         if host.find(".") == -1:
             sucesso=False
             return (sucesso, protocolo, host, caminho, arquivoNome)
 
+        #extraindo caminho
+        try:
+            caminho = url[fimHost + 1:]
+        except:
+            caminho = ""
+
         #extraindo nome do arquivo
         arquivoNome = url.split('/')[-1]
-        if arquivoNome == "" or arquivoNome.find(".") == -1:
-            sucesso=False
-            return (sucesso, protocolo, host, caminho, arquivoNome)
-
-        #extraindo caminho
-        fimCam = url.find(arquivoNome, fimHost)
-        caminho = url[fimHost:fimCam]
+        if arquivoNome.find(".") == -1 or caminho == "":
+            arquivoNome = ""
+        else:
+            caminho = caminho.split(arquivoNome)[0]
 
         #verificando protocolo
         if url.find("http") != -1:
