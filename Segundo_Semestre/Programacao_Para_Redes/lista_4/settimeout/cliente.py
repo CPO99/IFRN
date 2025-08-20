@@ -21,6 +21,7 @@ while True:
       # Enviando a mensagem ao servidor      
       sockUDP.sendto(strMensagem.encode(CODE_PAGE), (HOST_IP_SERVER, HOST_PORT))
 
+   
       # Recebendo ECHO do servidor
       byteRetorno, tuplaRetorno = sockUDP.recvfrom(BUFFER_SIZE)
 
