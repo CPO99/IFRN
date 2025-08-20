@@ -26,6 +26,10 @@ while ver:
             header_bytes = ler_header(sockTCP)
             strRespHeader = header_bytes.decode(CODE_PAGE, errors='replace')
 
+            # Salva o header em um arquivo
+            with open(os.path.join(strHost, "header_resposta.txt"), 'w', encoding="utf-8") as f:
+                f.write(strRespHeader)
+
             # Obtém status e possíveis redirecionamentos
             intStatusCode = obterStatusCode(strRespHeader)
             strNewHost, _ = extrairHeaders(strRespHeader)
