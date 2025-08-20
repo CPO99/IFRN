@@ -1,5 +1,6 @@
 #centralizador de funcoes, seguindo a lógica do professor para uma melhor organização
-import socket, ssl, sys
+import socket, ssl, sys, os
+from constantes import *
 
 #tratamento da URL
 def extrairURL(url:str):
@@ -35,9 +36,6 @@ def extrairURL(url:str):
         else:
             caminho = ""
 
-            
-            
-
         #extraindo nome do arquivo
         arquivoNome = url.split('/')[-1]
         if arquivoNome.find(".") == -1 or caminho == "":
@@ -65,7 +63,8 @@ def porta(protocolo:str):
     else:
         return 443
     
-def conectar(host:str, porta:int):
+
+
     import socket
 
     try:
@@ -87,3 +86,38 @@ def conectar(host:str, porta:int):
     finally:
         if 'socket' in locals(): 
             socket.close()
+
+def criarDiretorioHost(host: str) -> str:
+    dir_host = os.path.join(DIR_APP, host)
+    if not os.path.exists(dir_host):
+        os.makedirs(dir_host)
+
+    return dir_host
+                    
+def obterFullResponse(sock: socket) -> str:
+    data = b''
+    while True:
+        part = sock.recv(BUFFER_SIZE)
+        if not part: break
+        data += part
+    return data.decode(CODE_PAGE, errors='ignore')
+
+def criarSocketSSL(host: str) -> socket:
+    context = ssl.create_default_context()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    ssl_sock = context.wrap_socket(sock, server_hostname=host)
+    return ssl_sock
+
+def obterStatusCode(headerResposta: str) -> int:
+    strStatusLine = headerResposta.split('\r\n')[0]
+    intStatusCode = int(strStatusLine.split(' ')[1]) if 'HTTP/' in strStatusLine else 0
+    return intStatusCode
+
+def extrairHeaders(headerResposta: str) -> tuple:
+    strNovoHost = next((line[9:].strip() for line in headerResposta.split('\r\n') 
+                      if line.lower().startswith('location:')), None)
+    
+    intTamanhoConteudo = int(next((line[15:].strip() for line in headerResposta.split('\r\n') 
+                                 if line.lower().startswith('content-length:')), 0))
+    
+    return (strNovoHost, intTamanhoConteudo)
