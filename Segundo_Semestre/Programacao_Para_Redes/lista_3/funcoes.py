@@ -93,14 +93,16 @@ def criarDiretorioHost(host: str) -> str:
         os.makedirs(dir_host)
 
     return dir_host
-                    
-def obterFullResponse(sock: socket) -> str:
+
+#retorna a resposta recebida em bytes                    
+def obterFullResponse(sock: socket):
     data = b''
     while True:
         part = sock.recv(BUFFER_SIZE)
-        if not part: break
+        if not part:
+            break
         data += part
-    return data.decode(CODE_PAGE, errors='ignore')
+    return data
 
 def criarSocketSSL(host: str) -> socket:
     context = ssl.create_default_context()
