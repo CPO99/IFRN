@@ -4,13 +4,14 @@ from funcoes import *
 
 ver = True
 while ver:
-    # Solicita a URL completa
     url = input("Informe a URL completa: ")
 
-    # Extrai partes da URL
     boolSucesso, strProtocolo, strHost, strCaminho, strArquivoNome = extrairURL(url)
-
     dir_host = criarDiretorioHost(strHost)
+
+    print(f"Host:{strHost}")
+    print(f"Caminho do arquivo:{strCaminho}")
+    print(f"Nome do arquivo:{strArquivoNome}")
     
     if boolSucesso:
         try:
@@ -18,41 +19,38 @@ while ver:
             sockTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sockTCP.connect((strHost, PORT_HTTP))
 
-            # Envia requisição HEAD para obter cabeçalho
+            # Envia requisição HEAD
             sockTCP.sendall(REQ_HEAD_TEMPLATE.format(strHost).encode(CODE_PAGE))
-            full_response = obterFullResponse(sockTCP)
-            sockTCP.close()
 
-            # Separa header e body (aqui body é vazio, só interesse nos headers)
-            header_bytes, _, _ = full_response.partition(b'\r\n\r\n')
+            # Lê header (não fecha o socket ainda)
+            header_bytes = ler_header(sockTCP)
             strRespHeader = header_bytes.decode(CODE_PAGE, errors='replace')
 
-            # Obtém código de status e possíveis redirecionamentos
+            # Obtém status e possíveis redirecionamentos
             intStatusCode = obterStatusCode(strRespHeader)
             strNewHost, _ = extrairHeaders(strRespHeader)
 
             ###############################
-            # Redirecionamento 3xx (ex: HTTP -> HTTPS)
+            # Redirecionamento 3xx (HTTP -> HTTPS)
             if 300 <= intStatusCode < 400 and strNewHost:
                 new_host = strNewHost.split('//')[-1].split('/')[0]
 
-                # Cria socket SSL para HTTPS
                 sockTCP = criarSocketSSL(new_host)
                 sockTCP.connect((new_host, PORT_HTTPS))
 
-                # Envia requisição GET
                 sockTCP.sendall(REQ_GET_TEMPLATE.format(strCaminho, new_host).encode(CODE_PAGE))
-                full_response = obterFullResponse(sockTCP)
 
-                # Separando header e corpo
-                header_bytes, _, body_bytes = full_response.partition(b'\r\n\r\n')
+                # Lê header e corpo corretamente
+                header_bytes = ler_header(sockTCP)
+                body_bytes = ler_corpo_http(sockTCP, header_bytes)
+                sockTCP.close()
 
                 print(f'\nRedirecionado para: {new_host}')
                 print(f'Tamanho do conteúdo: {len(body_bytes)} bytes')
 
                 # Salvar arquivo
                 if strArquivoNome.endswith((".html", ".txt")) or strArquivoNome == "":
-                    nome_arquivo = strArquivoNome if strArquivoNome else "arquivo.html"
+                    nome_arquivo = strArquivoNome if strArquivoNome else "index.html"
                     with open(os.path.join(strHost, nome_arquivo), 'w', encoding=CODE_PAGE) as f:
                         f.write(body_bytes.decode(CODE_PAGE, errors='replace'))
                 else:
@@ -60,20 +58,18 @@ while ver:
                         f.write(body_bytes)
 
             else:
-                # Sem redirecionamento: HTTP GET normal
-                sockTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sockTCP.connect((strHost, PORT_HTTP))
+                # HTTP GET normal sem redirecionamento
                 sockTCP.sendall(REQ_GET_TEMPLATE.format(strCaminho, strHost).encode(CODE_PAGE))
-                full_response = obterFullResponse(sockTCP)
 
-                header_bytes, _, body_bytes = full_response.partition(b'\r\n\r\n')
+                header_bytes = ler_header(sockTCP)
+                body_bytes = ler_corpo_http(sockTCP, header_bytes)
+                sockTCP.close()
 
                 print(f'\nSocket conectado na porta {PORT_HTTP}')
                 print(f'Tamanho do conteúdo: {len(body_bytes)} bytes')
 
-                # Salvar arquivo
                 if strArquivoNome.endswith((".html", ".txt")) or strArquivoNome == "":
-                    nome_arquivo = strArquivoNome if strArquivoNome else "arquivo.html"
+                    nome_arquivo = strArquivoNome if strArquivoNome else "index.html"
                     with open(os.path.join(strHost, nome_arquivo), 'w', encoding=CODE_PAGE) as f:
                         f.write(body_bytes.decode(CODE_PAGE, errors='replace'))
                 else:
@@ -87,4 +83,4 @@ while ver:
                 sockTCP.close()
     else:
         print("\n\nInforme uma URL válida."\
-            "\n\nExemplo:\n - https://google.com\n - https://google.com/caminho\n - https://google.com/caminho/index.html\n")
+              "\n\nExemplo:\n - https://google.com\n - https://google.com/caminho\n - https://google.com/caminho/index.html\n")
