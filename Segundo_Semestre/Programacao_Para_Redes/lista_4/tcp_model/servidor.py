@@ -1,27 +1,39 @@
 import socket
 from constantes import *
 
-# Criando o socket (socket.AF_INET -> IPV4 / socket.SOCK_STREAM -> UTP)
-sockUDP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Criando o socket TCP (AF_INET -> IPv4 / SOCK_STREAM -> TCP)
+sockTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Ligando o socket à porta
-sockUDP.bind(('', HOST_PORT)) 
+sockTCP.bind(('', HOST_PORT))
+sockTCP.listen(1)  # pode aceitar 1 conexão na fila
 
-print('\nRecebendo Mensagens...\n\n')
+print('\nServidor TCP aguardando conexão...\n')
+
+# Aceitando conexão de um cliente
+conn, addr = sockTCP.accept()
+print(f"Conectado a: {addr}")
 
 while True:
-    # Recebendo os dados do cliente
-    byteMensagem, tuplaCliente = sockUDP.recvfrom(BUFFER_SIZE)
+    # Recebendo dados do cliente
+    byteMensagem = conn.recv(BUFFER_SIZE)
+    if not byteMensagem:  # se não veio nada, o cliente fechou
+        break
 
-    # Imprimindo a mensagem recebida convertendo de bytes para string
-    print(f'{tuplaCliente}: {byteMensagem.decode(CODE_PAGE)}')
+    msg = byteMensagem.decode(CODE_PAGE)
+    print(f'{addr}: {msg}')
 
-    # Enviando mensagem de retorno (ECHO) ao cliente
-    strECHO = f'DEVOLVENDO: {byteMensagem.decode(CODE_PAGE)}'
-    sockUDP.sendto(strECHO.encode(CODE_PAGE), tuplaCliente)
-    sockUDP.sendto("EXIT_BYE".encode(CODE_PAGE), tuplaCliente)
+    # Enviando mensagem de retorno (ECHO)
+    strECHO = f'DEVOLVENDO: {msg}'
+    conn.send(strECHO.encode(CODE_PAGE))
 
-# Fechando o socket
-sockUDP.close()
+    # Enviando mensagem de finalização
+    if msg.upper() == "SAIR":  
+        conn.send("EXIT_BYE".encode(CODE_PAGE))
+        break
+
+# Fechando a conexão e o socket
+conn.close()
+sockTCP.close()
 
 print('\nAVISO: Servidor finalizado...\n')
